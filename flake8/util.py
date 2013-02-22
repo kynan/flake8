@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-__all__ = ['ast', 'iter_child_nodes', 'OrderedSet']
-
 try:
     import ast
     iter_child_nodes = ast.iter_child_nodes

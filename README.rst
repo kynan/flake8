@@ -192,9 +192,8 @@ the ``pep8`` tool.  These codes are used to configure the list of errors
 which are selected or ignored.
 
 Each code consists of an upper case ASCII letter followed by three digits.
-The recommendation is to use a different prefix for each plugin.
-
-A list of the known prefixes is published below:
+The recommendation is to use a different prefix for each plugin. A list of the
+known prefixes is published below:
 
 - ``E***``/``W***``: `pep8 errors and warnings
   <http://pep8.readthedocs.org/en/latest/intro.html#error-codes>`_
