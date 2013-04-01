@@ -85,7 +85,9 @@ def get_style_guide(**kwargs):
 
 
 def get_python_version():
-    return '%s %s on %s' % (
-        platform.python_implementation(), platform.python_version(),
-        platform.system()
-    )
+    # The implementation isn't all that important.
+    try:
+        impl = platform.python_implementation() + " "
+    except AttributeError:  # Python 2.5
+        impl = ''
+    return '%s%s on %s' % (impl, platform.python_version(), platform.system())

@@ -33,13 +33,20 @@ def git_hook(complexity=-1, strict=False, ignore=None, lazy=False):
     """
     gitcmd = "git diff-index --cached --name-only HEAD"
     if lazy:
+        # Catch all files, including those not added to the index
         gitcmd = gitcmd.replace('--cached ', '')
 
+    if hasattr(ignore, 'split'):
+        ignore = ignore.split(',')
+
+    # Returns the exit code, list of files modified, list of error messages
     _, files_modified, _ = run(gitcmd)
 
+    # Run the checks
     flake8_style = get_style_guide(
         config_file=DEFAULT_CONFIG, ignore=ignore, max_complexity=complexity)
-    report = flake8_style.check_files(files_modified)
+    report = flake8_style.check_files([f for f in files_modified if
+                                       f.endswith('.py')])
 
     if strict:
         return report.total_errors
@@ -115,6 +122,10 @@ if __name__ == '__main__':
 
 
 def _install_hg_hook(path):
+    if not os.path.isfile(path):
+        # Make the file so we can avoid IOError's
+        open(path, 'w+').close()
+
     c = ConfigParser()
     c.readfp(open(path, 'r'))
     if not c.has_section('hooks'):
@@ -153,7 +164,10 @@ def install_hook():
     if 'git' in vcs:
         with open(vcs, 'w+') as fd:
             fd.write(git_hook_file)
-        os.chmod(vcs, 744)
+        # 0b111100100 == rwxr--r--
+        # Python 2.5 doesn't support 0b syntax so note that the above binary
+        # value is equivalent to 484 in decimal
+        os.chmod(vcs, 484)
     elif 'hg' in vcs:
         _install_hg_hook(vcs)
     else:
