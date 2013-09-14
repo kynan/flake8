@@ -112,8 +112,9 @@ def find_vcs():
         if not os.path.isdir(os.path.join(git_dir[0], 'hooks')):
             os.mkdir(os.path.join(git_dir[0], 'hooks'))
         return os.path.join(git_dir[0], 'hooks', 'pre-commit')
-    elif os.path.isdir('.hg'):
-        return '.hg/hgrc'
+    _, hg_dir, _ = run('hg root')
+    if hg_dir and os.path.isdir(hg_dir[0]):
+        return os.path.join(hg_dir[0], '.hg', 'hgrc')
     return ''
 
 
