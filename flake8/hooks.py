@@ -162,7 +162,7 @@ def install_hook():
     vcs = find_vcs()
 
     if not vcs:
-        p = get_parser()
+        p = get_parser()[0]
         sys.stderr.write('Error: could not find either a git or mercurial '
                          'directory. Please re-run this in a proper '
                          'repository.')
