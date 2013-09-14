@@ -71,14 +71,23 @@ def hg_hook(ui, repo, **kwargs):
     """
     complexity = ui.config('flake8', 'complexity', default=-1)
     strict = ui.configbool('flake8', 'strict', default=True)
+    ignore = ui.config('flake8', 'ignore', default=None)
     config = ui.config('flake8', 'config', default=True)
     if config is True:
         config = DEFAULT_CONFIG
 
     paths = _get_files(repo, **kwargs)
 
-    flake8_style = get_style_guide(
-        config_file=config, max_complexity=complexity)
+    # We only want to pass ignore and max_complexity if they differ from the
+    # defaults so that we don't override a local configuration file
+    options = {}
+    if ignore:
+        options['ignore'] = ignore
+    if complexity > -1:
+        options['max_complexity'] = complexity
+
+    flake8_style = get_style_guide(parse_argv=True, config_file=config,
+                                   **options)
     report = flake8_style.check_files(paths)
 
     if strict:
