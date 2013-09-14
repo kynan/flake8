@@ -43,9 +43,17 @@ def git_hook(complexity=-1, strict=False, ignore=None, lazy=False):
     # Returns the exit code, list of files modified, list of error messages
     _, files_modified, _ = run(gitcmd)
 
+    # We only want to pass ignore and max_complexity if they differ from the
+    # defaults so that we don't override a local configuration file
+    options = {}
+    if ignore:
+        options['ignore'] = ignore
+    if complexity > -1:
+        options['max_complexity'] = complexity
+
     # Run the checks
-    flake8_style = get_style_guide(
-        config_file=DEFAULT_CONFIG, ignore=ignore, max_complexity=complexity)
+    flake8_style = get_style_guide(parse_argv=True, config_file=DEFAULT_CONFIG,
+                                   **options)
     report = flake8_style.check_files([f for f in files_modified if
                                        f.endswith('.py')])
 
