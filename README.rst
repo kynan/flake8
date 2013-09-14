@@ -2,6 +2,9 @@
 Flake8
 ======
 
+.. image:: https://travis-ci.org/bmcustodio/flake8.png?branch=master
+  :target: https://travis-ci.org/bmcustodio/flake8
+
 Flake8 is a wrapper around these tools:
 
 - PyFlakes
